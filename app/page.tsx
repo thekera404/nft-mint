@@ -1,20 +1,21 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { useAccount, useWriteContract, useWaitForTransactionReceipt } from "wagmi"
-import { parseEther } from "viem"
+// import { useAccount, useWriteContract, useWaitForTransactionReceipt } from "wagmi"
+// import { parseEther } from "viem"
+import { useAccount, useWriteContract, useWaitForTransactionReceipt, useReadContract } from "wagmi"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { Loader2, ExternalLink, CheckCircle } from "lucide-react"
+import { Loader2, ExternalLink, CheckCircle, AlertCircle } from "lucide-react"
 import { sdk } from "@farcaster/miniapp-sdk"
 import { ConnectWallet } from "@/components/connect-wallet"
 import { CONTRACT_ADDRESS, CONTRACT_ABI } from "@/lib/contract"
 
 export default function NFTMintPage() {
   const [isReady, setIsReady] = useState(false)
-  const [supply, setSupply] = useState({ current: 4, max: 299 })
-  const [mintPrice] = useState("Free") // ETH
+  // const [supply, setSupply] = useState({ current: 4, max: 299 })
+  // const [mintPrice] = useState("Free") // ETH
 
   const { address, isConnected } = useAccount()
   const { writeContract, data: hash, isPending } = useWriteContract()
@@ -22,10 +23,37 @@ export default function NFTMintPage() {
     hash,
   })
 
+  const { data: mintActive } = useReadContract({
+    address: CONTRACT_ADDRESS,
+    abi: CONTRACT_ABI,
+    functionName: "mintActive",
+  })
+
+  const { data: totalSupply } = useReadContract({
+    address: CONTRACT_ADDRESS,
+    abi: CONTRACT_ABI,
+    functionName: "totalSupply",
+  })
+
+  const { data: maxSupply } = useReadContract({
+    address: CONTRACT_ADDRESS,
+    abi: CONTRACT_ABI,
+    functionName: "MAX_SUPPLY",
+  })
+
+  const { data: hasMinted } = useReadContract({
+    address: CONTRACT_ADDRESS,
+    abi: CONTRACT_ABI,
+    functionName: "hasMinted",
+    args: address ? [address] : undefined,
+  })  
+
   useEffect(() => {
     const initializeApp = async () => {
       try {
+        console.log("[v0] Initializing Farcaster SDK...")
         await sdk.actions.ready()
+        console.log("[v0] Farcaster SDK ready")
         setIsReady(true)
       } catch (error) {
         console.error("Failed to initialize Farcaster SDK:", error)
@@ -43,9 +71,10 @@ export default function NFTMintPage() {
       writeContract({
         address: CONTRACT_ADDRESS,
         abi: CONTRACT_ABI,
-        functionName: "mint",
-        args: [address, 1], // mint 1 NFT to connected address
-        value: parseEther(mintPrice),
+        // functionName: "mint",
+        // args: [address, 1], // mint 1 NFT to connected address
+        // value: parseEther(mintPrice),
+        functionName: "freeMint",
       })
     } catch (error) {
       console.error("Minting failed:", error)
@@ -57,6 +86,18 @@ export default function NFTMintPage() {
       window.open(`https://basescan.org/tx/${hash}`, "_blank")
     }
   }
+
+  const canMint = mintActive && !hasMinted && isConnected
+  const getMintButtonText = () => {
+    if (!mintActive) return "Minting Not Active"
+    if (hasMinted) return "Already Minted"
+    if (isPending || isConfirming) {
+      return isPending ? "Confirm in Wallet..." : "Minting..."
+    }
+    if (isSuccess) return "Minted Successfully!"
+    return "Free Mint"
+  }
+
 
   if (!isReady) {
     return (
@@ -79,13 +120,22 @@ export default function NFTMintPage() {
         <Card className="bg-white/10 backdrop-blur-md border-white/20 mb-6 overflow-hidden">
           <div className="aspect-square bg-gradient-to-br from-pink-400 via-purple-500 to-indigo-600 relative">
             <div className="absolute inset-0 flex items-center justify-center">
-              <div className="w-32 h-32 bg-white/20 rounded-full flex items-center justify-center backdrop-blur-sm">
+              <div className="aspect-square rounded-xl overflow-hidden border border-[#2A2A3A] mb-4">
                 <img src="/nft.gif" alt="NFT Preview" className="object-cover w-full h-full" />
               </div>
             </div>
+
+
+
+
+
+
+
+
             {/* Supply badge */}
             <Badge className="absolute top-4 right-4 bg-black/50 text-white border-0">
-              Supply: {supply.current} / {supply.max}
+              {/* Supply: {supply.current} / {supply.max} */}
+              Supply: {totalSupply?.toString() || "0"} / {maxSupply?.toString() || "0"}
             </Badge>
           </div>
 
@@ -95,7 +145,8 @@ export default function NFTMintPage() {
 
             <div className="flex justify-between items-center text-sm">
               <span className="text-purple-200">Price</span>
-              <span className="text-white font-semibold">{mintPrice} ETH</span>
+              {/* <span className="text-white font-semibold">{mintPrice} ETH</span> */}
+              <span className="text-green-400 font-semibold">FREE</span>
             </div>
           </div>
         </Card>
@@ -119,24 +170,45 @@ export default function NFTMintPage() {
                 </p>
               </div>
 
+
+              {!mintActive && (
+                <div className="bg-orange-500/10 backdrop-blur-md rounded-lg p-4 border border-orange-500/20">
+                  <div className="flex items-center gap-2">
+                    <AlertCircle className="h-4 w-4 text-orange-400" />
+                    <span className="text-orange-300 text-sm">Minting is currently inactive</span>
+                  </div>
+                </div>
+              )}
+
+              {hasMinted && (
+                <div className="bg-blue-500/10 backdrop-blur-md rounded-lg p-4 border border-blue-500/20">
+                  <div className="flex items-center gap-2">
+                    <CheckCircle className="h-4 w-4 text-blue-400" />
+                    <span className="text-blue-300 text-sm">You have already minted your free NFT</span>
+                  </div>
+                </div>
+              )}
+
+
               {/* Mint Button */}
               <Button
                 onClick={handleMint}
-                disabled={isPending || isConfirming}
-                className="w-full bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 text-white font-semibold py-6 text-lg rounded-xl border-0"
+                disabled={!canMint || isPending || isConfirming}
+                className="w-full bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 text-white font-semibold py-6 text-lg rounded-xl border-0 disabled:opacity-50"
               >
+              
                 {isPending || isConfirming ? (
                   <>
                     <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                    {isPending ? "Confirm in Wallet..." : "Minting..."}
+                    {getMintButtonText()}
                   </>
                 ) : isSuccess ? (
                   <>
                     <CheckCircle className="mr-2 h-5 w-5" />
-                    Minted Successfully!
+                    {getMintButtonText()}
                   </>
                 ) : (
-                  "Mint NFT"
+                  {getMintButtonText()}
                 )}
               </Button>
 
