@@ -104,16 +104,14 @@ export default function NFTMintPage() {
       <div className="w-full max-w-sm bg-[#0F0F17] rounded-2xl shadow-2xl border border-[#1F1F2A] p-4">
 
         {/* NFT Preview Card */}
-        <Card className="bg-white/10 backdrop-blur-md border-white/20 mb-6 overflow-hidden">
-          <div className="aspect-square bg-gradient-to-br from-pink-400 via-purple-500 to-indigo-600 relative">
-            <div className="aspect-square rounded-xl overflow-hidden border border-[#2A2A3A] mb-4">
-              <img src="/nft.gif" alt="NFT Preview" className="object-cover w-full h-full" />
-            </div>
-            {/* Supply badge */}
-            <Badge className="absolute top-4 right-4 bg-black/50 text-white border-0">
-              Supply: {totalSupply?.toString() || "0"} / {maxSupply?.toString() || "0"}
-            </Badge>
+        <Card className="bg-white/10 backdrop-blur-md border-white/20 mb-6 overflow-hidden">          
+          <div className="relative aspect-square">
+            <img src="/nft.gif" alt="NFT Preview" className="w-full h-full object-cover" />
           </div>
+          {/* Supply badge */}
+          <Badge className="absolute top-4 right-4 bg-black/60 text-white border-0">
+            Supply: {totalSupply?.toString() || "0"} / {maxSupply?.toString() || "0"}
+          </Badge>
 
           <div className="p-6">
             <h3 className="text-xl font-semibold text-white mb-2">Based Nouns Club</h3>
@@ -204,7 +202,10 @@ export default function NFTMintPage() {
         {/* OpenSea link */}
         <div className="mt-4 flex justify-center">
           <a href="https://opensea.io/collection/basednounsclub" target="_blank" rel="noopener noreferrer">
-            <img src="public/opensea.png" alt="OpenSea" className="h-5 w-5 object-contain" />
+            <svg width="20" height="20" viewBox="0 0 90 90" fill="none" xmlns="http://www.w3.org/2000/svg className="text-blue-400"">
+              <path d="M45 0C69.8514 0 90 20.1486 90 45C90 69.8514 69.8514 90 45 90C20.1486 90 0 69.8514 0 45C0 20.1486 20.1486 0 45 0Z" fill="currentColor"/>
+              <path d="M22.2011 46.512L22.3952 46.2069L34.1016 27.8939C34.2726 27.6257 34.6749 27.6535 34.8043 27.9447C36.76 32.3277 38.4475 37.7786 37.6569 41.1721C37.3194 42.5683 36.3948 44.4593 35.3545 46.2069C35.2204 46.4612 35.0725 46.7109 34.9153 46.9513C34.8413 47.0622 34.7165 47.127 34.5824 47.127H22.5432C22.2196 47.127 22.0301 46.7756 22.2011 46.512Z" fill="white" />
+            </svg>
             <span className="text-sm text-gray-300">View on OpenSea</span>
           </a>
         </div>
