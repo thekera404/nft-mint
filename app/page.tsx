@@ -100,21 +100,14 @@ export default function NFTMintPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900 p-4">
-      <div className="max-w-md mx-auto pt-8">
-        {/* Header */}
-        <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-white mb-2">Mint Your NFT</h1>
-          <p className="text-purple-200">Exclusive collection on Base</p>
-        </div>
+    <div className="min-h-screen bg-gradient-to-b from-[#0B0B0F] to-[#15151F] text-white flex items-center justify-center p-4">
+      <div className="w-full max-w-sm bg-[#0F0F17] rounded-2xl shadow-2xl border border-[#1F1F2A] p-4">
 
         {/* NFT Preview Card */}
         <Card className="bg-white/10 backdrop-blur-md border-white/20 mb-6 overflow-hidden">
           <div className="aspect-square bg-gradient-to-br from-pink-400 via-purple-500 to-indigo-600 relative">
-            <div className="absolute inset-0 flex items-center justify-center">
-              <div className="w-32 h-32 bg-white/20 rounded-full flex items-center justify-center backdrop-blur-sm">
-                <span className="text-4xl">🎨</span>
-              </div>
+            <div className="aspect-square rounded-xl overflow-hidden border border-[#2A2A3A] mb-4">
+              <img src="/nft.gif" alt="NFT Preview" className="object-cover w-full h-full" />
             </div>
             {/* Supply badge */}
             <Badge className="absolute top-4 right-4 bg-black/50 text-white border-0">
@@ -123,8 +116,8 @@ export default function NFTMintPage() {
           </div>
 
           <div className="p-6">
-            <h3 className="text-xl font-semibold text-white mb-2">Base NFT Collection</h3>
-            <p className="text-purple-200 text-sm mb-4">A unique digital collectible on the Base network</p>
+            <h3 className="text-xl font-semibold text-white mb-2">Based Nouns Club</h3>
+            <p className="text-purple-200 text-sm mb-4">Mint your exclusive NFT from the Based Nouns Club collection. Each user can mint only 1 NFT.</p>
 
             <div className="flex justify-between items-center text-sm">
               <span className="text-purple-200">Price</span>
@@ -204,6 +197,16 @@ export default function NFTMintPage() {
               )}
             </div>
           )}
+        </div>
+
+
+
+        {/* OpenSea link */}
+        <div className="mt-4 flex justify-center">
+          <a href="https://opensea.io/collection/basednounsclub" target="_blank" rel="noopener noreferrer">
+            <img src="public/opensea.png" alt="OpenSea" className="h-5 w-5 object-contain" />
+            <span className="text-sm text-gray-300">View on OpenSea</span>
+          </a>
         </div>
 
         {/* Footer */}
