@@ -8,7 +8,6 @@ import "./globals.css"
 export const metadata: Metadata = {
   title: "NFT Mint - Farcaster Mini App",
   description: "Mint exclusive NFTs on Base network",
-  generator: "v0.app",
   openGraph: {
     title: "NFT Mint - Farcaster Mini App",
     description: "Mint exclusive NFTs on Base network",
@@ -25,7 +24,7 @@ export const metadata: Metadata = {
           name: "NFT Mint",
           url: process.env.NEXT_PUBLIC_APP_URL || "https://nftmint-henna.vercel.app",
           splashImageUrl: `${process.env.NEXT_PUBLIC_APP_URL || "https://nftmint-henna.vercel.app"}/splash.png`, // 200x200px
-          splashBackgroundColor: "#6366F1",
+          splashBackgroundColor: "#0f0f17",
         },
       },
     }),

@@ -14,6 +14,7 @@
     "splashImageUrl": "https://nftmint-henna.vercel.app/splash.png",
     "splashBackgroundColor": "#0f0f17",
     "theme": "dark",
+    "primaryCategory": "nft",
     "tags": [
       "basednounsclub",
       "basednouns",
@@ -24,12 +25,12 @@
       "free",
       "nftmint",
       "nftminting",
-      "nftminting",
+      "nftminting"
     ],
     "heroImageUrl": "https://rewards.warpcast.com/image.png",
-    "tagline": "Free NFT Mint",
+    "tagline": "Free NFT minting on Base",
     "ogTitle": "NFT Mint",
-    "ogDescription": "Mint your exclusive NFT from the Based Nouns Club collection. Each user can mint only 1 NFT.",
+    "ogDescription": "Mint your exclusive NFT collection directly from Farcaster. Free minting available on Base network.",
     "ogImageUrl": "https://nftmint-henna.vercel.app/image.png",
     "ogUrl": "https://nftmint-henna.vercel.app/",
     "ogType": "website",
