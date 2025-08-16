@@ -37,5 +37,20 @@
     "ogDescription": "Mint your exclusive NFT from the Based Nouns Club collection. Each user can mint only 1 NFT.",
     "ogImageUrl": "https://nftmint-henna.vercel.app/og.png"
 
-  }
+  },
+
+  "frames": {
+    "recommended_frame_height": "tall"
+  },
+  "capabilities": {
+    "frames": {
+      "status": "supported"
+    },
+    "wallet": {
+      "chains": ["base"]
+    }
+  },
+  "icons": {
+    "192x192": "/icon.png"
+  }  
 }
