@@ -5,31 +5,57 @@ import { GeistMono } from "geist/font/mono"
 import { Providers } from "@/components/providers"
 import "./globals.css"
 
+
+
+const frameMetadata = {
+  version: "next",
+  imageUrl: "https://nftmint-henna.vercel.app/image.png",
+  button: {
+    title: "Mint NFT",
+    action: {
+      type: "launch_frame",
+      name: "NFT MINT",
+      url: "https://nftmint-henna.vercel.app/",
+      splashImageUrl: "https://nftmint-henna.vercel.app/icon.png",
+      splashBackgroundColor: "#4F46E5"
+    }
+  }
+};
+
 export const metadata: Metadata = {
   title: "NFT Mint - Farcaster Mini App",
   description: "Mint exclusive NFTs on Base network",
-  openGraph: {
-    title: "NFT Mint - Farcaster Mini App",
-    description: "Mint exclusive NFTs on Base network",
-    images: [`${process.env.NEXT_PUBLIC_APP_URL || "https://nftmint-henna.vercel.app"}/image.png`],
-  },
+  // openGraph: {
+  //   title: "NFT Mint - Farcaster Mini App",
+  //   description: "Mint exclusive NFTs on Base network",
+  //   images: "https://nftmint-henna.vercel.app/image.png",
+  // },
   other: {
-    "fc:miniapp": JSON.stringify({
-      version: "1", // Must be "1", not "1.0.0"
-      imageUrl: `${process.env.NEXT_PUBLIC_APP_URL || "https://nftmint-henna.vercel.app"}/image.png`, // 3:2 aspect ratio required
-      button: {
-        title: "Mint NFT", // Max 32 characters
-        action: {
-          type: "launch_frame",
-          name: "NFT Mint",
-          url: process.env.NEXT_PUBLIC_APP_URL || "https://nftmint-henna.vercel.app",
-          splashImageUrl: `${process.env.NEXT_PUBLIC_APP_URL || "https://nftmint-henna.vercel.app"}/splash.png`, // 200x200px
-          splashBackgroundColor: "#6366F1",
-        },
-      },
-    }),
-  },
-}
+    "fc:frame": JSON.stringify(frameMetadata),
+    "og:image": "https://iq-test-v1.vercel.app/image.png",
+    "og:title": "IQ Test",
+    "og:description": "Test your IQ and get instant results with CELO payment"
+
+
+
+
+
+    // "fc:miniapp": JSON.stringify({
+    //   version: "1", // Must be "1", not "1.0.0"
+    //   imageUrl: "https://nftmint-henna.vercel.app/image.png", // 3:2 aspect ratio required
+    //   button: {
+    //     title: "Mint NFT", // Max 32 characters
+    //     action: {
+    //       type: "launch_frame",
+    //       name: "NFT Mint",
+    //       url: "https://nftmint-henna.vercel.app",
+    //       splashImageUrl: "https://nftmint-henna.vercel.app/splash.png", // 200x200px
+    //       splashBackgroundColor: "#6366F1",
+    //     },
+    //   },
+    // }),
+  }
+};
 
 export default function RootLayout({
   children,
@@ -51,5 +77,5 @@ html {
         <Providers>{children}</Providers>
       </body>
     </html>
-  )
+  );
 }
