@@ -15,16 +15,7 @@
     "imageUrl": "https://nftmint-henna.vercel.app/image.png",
     "buttonTitle": "Mint NFT",
     "splashImageUrl": "https://nftmint-henna.vercel.app/splash.png",
-    "splashBackgroundColor": "#6366F1",
-    "theme": "dark",
-    "primaryCategory": "social",
-    "tags": [
-      "basednounsclub",
-      "based",
-      "mint",
-      "free",
-      "nftmint"
-    ]
+    "splashBackgroundColor": "#6366F1"
 
 
 
