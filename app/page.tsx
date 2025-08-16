@@ -13,8 +13,8 @@ import { CONTRACT_ADDRESS, CONTRACT_ABI } from "@/lib/contract"
 
 export default function NFTMintPage() {
   const [isReady, setIsReady] = useState(false)
-  const [supply, setSupply] = useState({ current: 773, max: 10000 })
-  const [mintPrice] = useState("0.001") // ETH
+  const [supply, setSupply] = useState({ current: 4, max: 299 })
+  const [mintPrice] = useState("Free") // ETH
 
   const { address, isConnected } = useAccount()
   const { writeContract, data: hash, isPending } = useWriteContract()
@@ -80,7 +80,7 @@ export default function NFTMintPage() {
           <div className="aspect-square bg-gradient-to-br from-pink-400 via-purple-500 to-indigo-600 relative">
             <div className="absolute inset-0 flex items-center justify-center">
               <div className="w-32 h-32 bg-white/20 rounded-full flex items-center justify-center backdrop-blur-sm">
-                <span className="text-4xl">🎨</span>
+                <img src="/nft.gif" alt="NFT Preview" className="object-cover w-full h-full" />
               </div>
             </div>
             {/* Supply badge */}
@@ -90,8 +90,8 @@ export default function NFTMintPage() {
           </div>
 
           <div className="p-6">
-            <h3 className="text-xl font-semibold text-white mb-2">Base NFT Collection</h3>
-            <p className="text-purple-200 text-sm mb-4">A unique digital collectible on the Base network</p>
+            <h3 className="text-xl font-semibold text-white mb-2">Based Nouns Club</h3>
+            <p className="text-purple-200 text-sm mb-4">Mint your exclusive NFT from the Based Nouns Club collection. Each user can mint only 1 NFT.</p>
 
             <div className="flex justify-between items-center text-sm">
               <span className="text-purple-200">Price</span>
