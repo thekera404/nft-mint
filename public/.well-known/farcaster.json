@@ -4,41 +4,19 @@
     "payload": "eyJkb21haW4iOiJuZnRtaW50LWhlbm5hLnZlcmNlbC5hcHAifQ",
     "signature": "MHhkYjM0NjdhNTQ2Yjk0YzBiY2ZiMWY1ZGRmM2YzZWE2MjA3OGVjMzk4Yjc1YTBkMDA5N2UxMzgzZjlkZTZlMTM3MjdjMzZiNzViNDRkNDFjZGNjNzIwNDM2ZGRmOTQwYjdhZDNhZGVkYTBjOWRiMTg0ZTZhZmYzNGE2N2Q2Yjk4MDFj"
   },
-  "miniApp": {
+  "name": "NFT Mint",
+  "description": "Test your IQ and get instant results with CELO payment",
+  "version": "1",
+  "frame": {
     "version": "1",
-    "name": "NFT Mint",
-    "iconUrl": "https://nftmint-henna.vercel.app/icon.png",
+    "name": "IQ Test",
+    "homeUrl": "https://nftmint-henna.vercel.app",
+    "iconUrl": "https://nftmint-henna.vercel.app/image.png",
     "imageUrl": "https://nftmint-henna.vercel.app/image.png",
+    "buttonTitle": "Mint NFTt",
     "splashImageUrl": "https://nftmint-henna.vercel.app/splash.png",
-    "splashBackgroundColor": "#6366F1",
-    "homeUrl": "https://nftmint-henna.vercel.app/",
-    "webhookUrl": "https://nftmint-henna.vercel.app/api/webhook",
-    "subtitle": "Free NFT minting on Base",
-    "description": "Mint your exclusive NFT from the Based Nouns Club collection.",
-    "buttonTitle": "Mint NFT",
-
-    "theme": "dark",
-    "primaryCategory": "nft",
-    "tags": [
-      "basednounsclub",
-      "basednouns",
-      "based",
-      "nouns",
-      "nft",
-      "mint",
-      "free",
-      "nftmint",
-      "nftminting",
-      "nftminting"
-    ],
-    "heroImageUrl": "https://nftmint-henna.vercel.app/og.png",
-    "tagline": "Free NFT minting on Base",
-    "ogTitle": "NFT Mint",
-    "ogDescription": "Mint your exclusive NFT from the Based Nouns Club collection. Each user can mint only 1 NFT.",
-    "ogImageUrl": "https://nftmint-henna.vercel.app/og.png"
-
+    "splashBackgroundColor": "#6366F1"
   },
-
   "frames": {
     "recommended_frame_height": "tall"
   },
@@ -51,6 +29,7 @@
     }
   },
   "icons": {
-    "192x192": "/icon.png"
-  }  
+    "192x192": "/icon-192.svg"
+  }
+
 }
