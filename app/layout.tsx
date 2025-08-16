@@ -24,7 +24,7 @@ export const metadata: Metadata = {
           name: "NFT Mint",
           url: process.env.NEXT_PUBLIC_APP_URL || "https://nftmint-henna.vercel.app",
           splashImageUrl: `${process.env.NEXT_PUBLIC_APP_URL || "https://nftmint-henna.vercel.app"}/splash.png`, // 200x200px
-          splashBackgroundColor: "#0f0f17",
+          splashBackgroundColor: "0B0B0F",
         },
       },
     }),
