@@ -8,6 +8,7 @@
     "version": "1",
     "name": "NFT Mint",
     "iconUrl": "https://nftmint-henna.vercel.app/icon.png",
+    "imageUrl": "https://nftmint-henna.vercel.app/image.png",
     "splashImageUrl": "https://nftmint-henna.vercel.app/splash.png",
     "splashBackgroundColor": "#6366F1",
     "homeUrl": "https://nftmint-henna.vercel.app/",
