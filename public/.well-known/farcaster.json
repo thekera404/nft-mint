@@ -17,18 +17,14 @@
     "splashImageUrl": "https://nftmint-henna.vercel.app/splash.png",
     "splashBackgroundColor": "#6366F1",
     "theme": "dark",
-    "primaryCategory": "nft",
+    "primaryCategory": "social",
     "tags": [
       "basednounsclub",
-      "basednouns",
       "based",
-      "nouns",
       "nft",
       "mint",
       "free",
-      "nftmint",
-      "nftminting",
-      "nftminting"
+      "nftmint"
     ]
 
 
@@ -45,6 +41,7 @@
       "chains": ["base"]
     }
   },
+
   "icons": {
     "192x192": "/icon-192.svg"
   }
