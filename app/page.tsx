@@ -1,8 +1,6 @@
 "use client"
 
 import { useEffect, useState } from "react"
-// import { useAccount, useWriteContract, useWaitForTransactionReceipt } from "wagmi"
-// import { parseEther } from "viem"
 import { useAccount, useWriteContract, useWaitForTransactionReceipt, useReadContract } from "wagmi"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
@@ -14,8 +12,6 @@ import { CONTRACT_ADDRESS, CONTRACT_ABI } from "@/lib/contract"
 
 export default function NFTMintPage() {
   const [isReady, setIsReady] = useState(false)
-  // const [supply, setSupply] = useState({ current: 4, max: 299 })
-  // const [mintPrice] = useState("Free") // ETH
 
   const { address, isConnected } = useAccount()
   const { writeContract, data: hash, isPending } = useWriteContract()
@@ -46,7 +42,7 @@ export default function NFTMintPage() {
     abi: CONTRACT_ABI,
     functionName: "hasMinted",
     args: address ? [address] : undefined,
-  })  
+  })
 
   useEffect(() => {
     const initializeApp = async () => {
@@ -56,7 +52,7 @@ export default function NFTMintPage() {
         console.log("[v0] Farcaster SDK ready")
         setIsReady(true)
       } catch (error) {
-        console.error("Failed to initialize Farcaster SDK:", error)
+        console.error("[v0] Failed to initialize Farcaster SDK:", error)
         setIsReady(true) // Continue even if SDK fails
       }
     }
@@ -71,9 +67,6 @@ export default function NFTMintPage() {
       writeContract({
         address: CONTRACT_ADDRESS,
         abi: CONTRACT_ABI,
-        // functionName: "mint",
-        // args: [address, 1], // mint 1 NFT to connected address
-        // value: parseEther(mintPrice),
         functionName: "freeMint",
       })
     } catch (error) {
@@ -98,7 +91,6 @@ export default function NFTMintPage() {
     return "Free Mint"
   }
 
-
   if (!isReady) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900 flex items-center justify-center">
@@ -120,32 +112,22 @@ export default function NFTMintPage() {
         <Card className="bg-white/10 backdrop-blur-md border-white/20 mb-6 overflow-hidden">
           <div className="aspect-square bg-gradient-to-br from-pink-400 via-purple-500 to-indigo-600 relative">
             <div className="absolute inset-0 flex items-center justify-center">
-              <div className="aspect-square rounded-xl overflow-hidden border border-[#2A2A3A] mb-4">
-                <img src="/nft.gif" alt="NFT Preview" className="object-cover w-full h-full" />
+              <div className="w-32 h-32 bg-white/20 rounded-full flex items-center justify-center backdrop-blur-sm">
+                <span className="text-4xl">🎨</span>
               </div>
             </div>
-
-
-
-
-
-
-
-
             {/* Supply badge */}
             <Badge className="absolute top-4 right-4 bg-black/50 text-white border-0">
-              {/* Supply: {supply.current} / {supply.max} */}
               Supply: {totalSupply?.toString() || "0"} / {maxSupply?.toString() || "0"}
             </Badge>
           </div>
 
           <div className="p-6">
-            <h3 className="text-xl font-semibold text-white mb-2">Based Nouns Club</h3>
-            <p className="text-purple-200 text-sm mb-4">Mint your exclusive NFT from the Based Nouns Club collection. Each user can mint only 1 NFT.</p>
+            <h3 className="text-xl font-semibold text-white mb-2">Base NFT Collection</h3>
+            <p className="text-purple-200 text-sm mb-4">A unique digital collectible on the Base network</p>
 
             <div className="flex justify-between items-center text-sm">
               <span className="text-purple-200">Price</span>
-              {/* <span className="text-white font-semibold">{mintPrice} ETH</span> */}
               <span className="text-green-400 font-semibold">FREE</span>
             </div>
           </div>
@@ -170,7 +152,6 @@ export default function NFTMintPage() {
                 </p>
               </div>
 
-
               {!mintActive && (
                 <div className="bg-orange-500/10 backdrop-blur-md rounded-lg p-4 border border-orange-500/20">
                   <div className="flex items-center gap-2">
@@ -189,14 +170,12 @@ export default function NFTMintPage() {
                 </div>
               )}
 
-
               {/* Mint Button */}
               <Button
                 onClick={handleMint}
                 disabled={!canMint || isPending || isConfirming}
                 className="w-full bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 text-white font-semibold py-6 text-lg rounded-xl border-0 disabled:opacity-50"
               >
-              
                 {isPending || isConfirming ? (
                   <>
                     <Loader2 className="mr-2 h-5 w-5 animate-spin" />
@@ -208,7 +187,7 @@ export default function NFTMintPage() {
                     {getMintButtonText()}
                   </>
                 ) : (
-                  {getMintButtonText()}
+                  getMintButtonText()
                 )}
               </Button>
 
