@@ -12,6 +12,7 @@ import { CONTRACT_ADDRESS, CONTRACT_ABI } from "@/lib/contract"
 
 export default function NFTMintPage() {
   const [isReady, setIsReady] = useState(false)
+  const [isFarcasterContext, setIsFarcasterContext] = useState(false)
 
   const { address, isConnected } = useAccount()
   const { writeContract, data: hash, isPending } = useWriteContract()
@@ -44,11 +45,36 @@ export default function NFTMintPage() {
     args: address ? [address] : undefined,
   })
 
+  // useEffect(() => {
+  //   const initializeApp = async () => {
+  //     try {
+  //       console.log("[v0] Initializing Farcaster SDK...")
+  //       await sdk.actions.ready()
+  //       console.log("[v0] Farcaster SDK ready")
+  //       setIsReady(true)
+  //     } catch (error) {
+  //       console.error("[v0] Failed to initialize Farcaster SDK:", error)
+  //       setIsReady(true) // Continue even if SDK fails
+  //     }
+  //   }
+
+  //   initializeApp()
+  // }, [])
   useEffect(() => {
     const initializeApp = async () => {
       try {
         console.log("[v0] Initializing Farcaster SDK...")
-        await sdk.actions.ready()
+        const isInFarcaster =
+          typeof window !== "undefined" && (window.parent !== window || window.location !== window.parent.location)
+
+        if (isInFarcaster) {
+          setIsFarcasterContext(true)
+          await Promise.race([
+            sdk.actions.ready(),
+            new Promise((_, reject) => setTimeout(() => reject(new Error("SDK timeout")), 5000)),
+          ])
+        }
+
         console.log("[v0] Farcaster SDK ready")
         setIsReady(true)
       } catch (error) {
@@ -59,6 +85,8 @@ export default function NFTMintPage() {
 
     initializeApp()
   }, [])
+
+
 
   const handleMint = async () => {
     if (!isConnected || !address) return
