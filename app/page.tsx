@@ -12,7 +12,7 @@ import { CONTRACT_ADDRESS, CONTRACT_ABI } from "@/lib/contract"
 
 export default function NFTMintPage() {
   const [isReady, setIsReady] = useState(false)
-  const [isFarcasterContext, setIsFarcasterContext] = useState(false)
+  // const [isFarcasterContext, setIsFarcasterContext] = useState(false)
 
   const { address, isConnected } = useAccount()
   const { writeContract, data: hash, isPending } = useWriteContract()
