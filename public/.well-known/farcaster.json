@@ -5,7 +5,7 @@
     "signature": "MHhkYjM0NjdhNTQ2Yjk0YzBiY2ZiMWY1ZGRmM2YzZWE2MjA3OGVjMzk4Yjc1YTBkMDA5N2UxMzgzZjlkZTZlMTM3MjdjMzZiNzViNDRkNDFjZGNjNzIwNDM2ZGRmOTQwYjdhZDNhZGVkYTBjOWRiMTg0ZTZhZmYzNGE2N2Q2Yjk4MDFj"
   },
   "name": "NFT Mint",
-  "description": "Test your IQ and get instant results with CELO payment",
+  "description": "Mint your exclusive NFT from the Based Nouns Club collection.",
   "version": "1",
   "frame": {
     "version": "1",
@@ -15,7 +15,24 @@
     "imageUrl": "https://nftmint-henna.vercel.app/image.png",
     "buttonTitle": "Mint NFT",
     "splashImageUrl": "https://nftmint-henna.vercel.app/splash.png",
-    "splashBackgroundColor": "#6366F1"
+    "splashBackgroundColor": "#6366F1",
+    "theme": "dark",
+    "primaryCategory": "nft",
+    "tags": [
+      "basednounsclub",
+      "basednouns",
+      "based",
+      "nouns",
+      "nft",
+      "mint",
+      "free",
+      "nftmint",
+      "nftminting",
+      "nftminting"
+    ]
+
+
+
   },
   "frames": {
     "recommended_frame_height": "tall"
