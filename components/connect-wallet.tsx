@@ -109,7 +109,6 @@
 
 
 
-
 "use client"
 
 import { useConnect, useAccount } from "wagmi"
@@ -123,41 +122,54 @@ export function ConnectWallet() {
 
   const handleConnect = async () => {
     try {
-      // First, try to use Farcaster's wallet provider
-      const provider = await sdk.wallet.getEthereumProvider()
-
-      // Look for Farcaster-specific connector first
-      const farcasterConnector = connectors.find(
-        (connector) => 
-          connector.id === "farcasterMiniApp" || 
-          connector.name?.includes("Farcaster")
-      )
-
-      if (farcasterConnector) {
-        connect({ connector: farcasterConnector })
-        return
+      // Check if we're in a Farcaster context
+      if (typeof window !== 'undefined' && window.parent !== window) {
+        // We're in an iframe (Farcaster frame)
+        try {
+          // Try to get Farcaster's provider first
+          const provider = await sdk.wallet.getEthereumProvider()
+          
+          if (provider) {
+            // Set the provider globally so wagmi can use it
+            if (typeof window !== 'undefined') {
+              (window as any).ethereum = provider
+            }
+          }
+        } catch (error) {
+          console.log("Farcaster provider not available:", error)
+        }
       }
 
-      // Fallback to injected connector (should work with Farcaster's provider)
-      const injectedConnector = connectors.find((connector) => connector.type === "injected")
+      // Look for connectors in order of preference
+      const connectorPriority = [
+        // Farcaster-specific connectors
+        (c: any) => c.id === "farcasterMiniApp",
+        (c: any) => c.name?.toLowerCase().includes("farcaster"),
+        // Standard connectors
+        (c: any) => c.type === "injected" || c.id === "injected",
+        (c: any) => c.id === "metaMask",
+        (c: any) => c.id === "walletConnect",
+        // Fallback to any available connector
+        () => true
+      ]
 
-      if (injectedConnector) {
-        connect({ connector: injectedConnector })
-        return
+      let selectedConnector = null
+      
+      for (const priorityFn of connectorPriority) {
+        selectedConnector = connectors.find(priorityFn)
+        if (selectedConnector) break
+      }
+
+      if (selectedConnector) {
+        console.log("Connecting with:", selectedConnector.name || selectedConnector.id)
+        await connect({ connector: selectedConnector })
+      } else {
+        throw new Error("No connectors available")
       }
 
     } catch (error) {
-      console.error("Failed to connect with Farcaster provider:", error)
-    }
-
-    // Final fallback to any available connector
-    try {
-      const fallbackConnector = connectors[0]
-      if (fallbackConnector) {
-        connect({ connector: fallbackConnector })
-      }
-    } catch (error) {
-      console.error("Failed to connect wallet:", error)
+      console.error("Connection failed:", error)
+      // Don't throw here, let wagmi handle the error state
     }
   }
 
