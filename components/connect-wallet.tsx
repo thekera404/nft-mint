@@ -113,77 +113,105 @@
 
 "use client"
 
+import { useEffect, useState } from "react"
 import { useConnect, useAccount } from "wagmi"
 import { Button } from "@/components/ui/button"
-import { Wallet, Loader2, X, Check } from "lucide-react"
-import { useEffect, useState } from "react"
+import { Wallet, Loader2 } from "lucide-react"
+
+// Types for Farcaster SDK if available
+declare global {
+  interface Window {
+    farcaster?: {
+      wallet?: {
+        chooseWallet?: () => Promise<{ address: string; name: string }>
+      }
+    }
+  }
+}
 
 export function ConnectWallet() {
-  const { connectors, connect, isPending, error } = useConnect()
+  const { connect, connectors, isPending, error } = useConnect()
   const { isConnected } = useAccount()
   const [isFarcasterContext, setIsFarcasterContext] = useState(false)
-  const [showWalletModal, setShowWalletModal] = useState(false)
-  const [connectingConnector, setConnectingConnector] = useState<string | null>(null)
+  const [preferredWallet, setPreferredWallet] = useState<string | null>(null)
 
   useEffect(() => {
     const detectFarcasterContext = () => {
-      // Check if running in Farcaster mobile app
+      if (typeof window === "undefined") return false
+
       const userAgent = navigator.userAgent.toLowerCase()
       const isFarcasterMobile = userAgent.includes("farcaster")
 
-      // Check if running in Farcaster web context
       const isFarcasterWeb =
         window.location.hostname.includes("farcaster.xyz") ||
-        window.parent !== window || // iframe context
+        window.parent !== window ||
         document.referrer.includes("farcaster")
 
-      // Check for Farcaster SDK availability
-      const hasFarcasterSDK = typeof window !== "undefined" && (window as any).farcaster !== undefined
+      const hasFarcasterSDK = !!window.farcaster
 
       return isFarcasterMobile || isFarcasterWeb || hasFarcasterSDK
     }
 
     setIsFarcasterContext(detectFarcasterContext())
+
+    // Restore last chosen wallet
+    const savedWallet = localStorage.getItem("preferredWallet")
+    if (savedWallet) setPreferredWallet(savedWallet)
   }, [])
 
-  const handleConnect = () => {
-    setShowWalletModal(true)
-  }
-
-  const handleWalletSelect = async (connector: any) => {
+  const handleConnect = async () => {
     try {
-      setConnectingConnector(connector.id)
-      await connect({ connector })
-      setShowWalletModal(false)
-    } catch (error) {
-      console.error("Failed to connect:", error)
-    } finally {
-      setConnectingConnector(null)
-    }
-  }
-
-  const getWalletOptions = () => {
-    if (isFarcasterContext) {
-      // In Farcaster context, prioritize Farcaster wallet
-      const farcasterConnector = connectors.find(
-        (c) => c.name.toLowerCase().includes("farcaster") || c.id.includes("farcaster") || c.id.includes("miniapp"),
-      )
-      const injectedConnector = connectors.find(
-        (c) => c.name.toLowerCase().includes("injected") || c.name.toLowerCase().includes("metamask"),
+      console.log(
+        "[v2] Available connectors:",
+        connectors.map((c) => ({ id: c.id, name: c.name })),
       )
 
-      return [
-        ...(farcasterConnector ? [{ ...farcasterConnector, displayName: "Farcaster Wallet", recommended: true }] : []),
-        ...(injectedConnector ? [{ ...injectedConnector, displayName: "External Wallet", recommended: false }] : []),
-      ]
-    } else {
-      // Outside Farcaster, prioritize MetaMask and other wallets
-      return connectors.map((connector) => ({
-        ...connector,
-        displayName: connector.name === "Injected" ? "MetaMask" : connector.name,
-        recommended:
-          connector.name.toLowerCase().includes("metamask") || connector.name.toLowerCase().includes("injected"),
-      }))
+      if (isFarcasterContext && window.farcaster?.wallet?.chooseWallet) {
+        console.log("[v2] In Farcaster context → opening Farcaster wallet chooser")
+
+        const chosen = await window.farcaster.wallet.chooseWallet()
+        if (chosen?.name) {
+          setPreferredWallet(chosen.name)
+          localStorage.setItem("preferredWallet", chosen.name)
+        }
+
+        // Connect via Farcaster connector if available
+        const farcasterConnector = connectors.find((c) => c.id === "farcasterMiniApp")
+        if (farcasterConnector) {
+          await connect({ connector: farcasterConnector })
+          return
+        }
+      }
+
+      // Outside Farcaster → let user pick from wagmi connectors
+      let chosenConnector
+      if (!preferredWallet) {
+        // Auto-pick first available
+        chosenConnector = connectors[0]
+      } else {
+        chosenConnector = connectors.find((c) =>
+          c.name?.toLowerCase().includes(preferredWallet.toLowerCase()),
+        )
+      }
+
+      if (!chosenConnector) {
+        // fallback order
+        chosenConnector =
+          connectors.find((c) => c.id === "metaMask") ||
+          connectors.find((c) => c.id === "injected") ||
+          connectors[0]
+      }
+
+      if (chosenConnector) {
+        console.log("[v2] Using connector:", chosenConnector.name || chosenConnector.id)
+        setPreferredWallet(chosenConnector.name)
+        localStorage.setItem("preferredWallet", chosenConnector.name)
+        await connect({ connector: chosenConnector })
+      } else {
+        throw new Error("No wallet connectors available")
+      }
+    } catch (err) {
+      console.error("[v2] Failed to connect wallet:", err)
     }
   }
 
@@ -204,69 +232,26 @@ export function ConnectWallet() {
         ) : (
           <>
             <Wallet className="mr-2 h-5 w-5" />
-            {isFarcasterContext ? "Connect Farcaster Wallet" : "Connect Wallet"}
+            {preferredWallet
+              ? `Connect ${preferredWallet}`
+              : isFarcasterContext
+              ? "Choose Farcaster Wallet"
+              : "Choose Wallet"}
           </>
         )}
       </Button>
 
-      {error && <p className="text-red-400 text-sm text-center">Connection failed. Please try again.</p>}
+      {error && (
+        <p className="text-red-400 text-sm text-center">
+          Connection failed. Please try again.
+        </p>
+      )}
 
-      {showWalletModal && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <div className="bg-gray-900 rounded-2xl p-6 w-full max-w-md border border-gray-700">
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="text-xl font-semibold text-white">Choose preferred wallet</h2>
-              <button
-                onClick={() => setShowWalletModal(false)}
-                className="text-gray-400 hover:text-white transition-colors"
-              >
-                <X className="h-5 w-5" />
-              </button>
-            </div>
-
-            <p className="text-gray-400 text-sm mb-6">
-              {isFarcasterContext
-                ? "This wallet will be used for transactions in miniapps. You can change it anytime in Settings."
-                : "Choose your preferred wallet to connect and interact with the app."}
-            </p>
-
-            <div className="space-y-3">
-              {getWalletOptions().map((connector) => (
-                <button
-                  key={connector.id}
-                  onClick={() => handleWalletSelect(connector)}
-                  disabled={connectingConnector === connector.id}
-                  className="w-full flex items-center justify-between p-4 rounded-xl bg-gray-800 hover:bg-gray-700 transition-colors border border-gray-600 disabled:opacity-50"
-                >
-                  <div className="flex items-center space-x-3">
-                    <div className="w-8 h-8 rounded-full bg-purple-600 flex items-center justify-center">
-                      <Wallet className="h-4 w-4 text-white" />
-                    </div>
-                    <div className="text-left">
-                      <div className="text-white font-medium">{connector.displayName}</div>
-                      {connector.recommended && <div className="text-xs text-green-400">Recommended</div>}
-                    </div>
-                  </div>
-
-                  <div className="flex items-center">
-                    {connectingConnector === connector.id ? (
-                      <Loader2 className="h-4 w-4 animate-spin text-purple-400" />
-                    ) : connector.recommended ? (
-                      <Check className="h-4 w-4 text-green-400" />
-                    ) : null}
-                  </div>
-                </button>
-              ))}
-            </div>
-
-            <button
-              onClick={() => setShowWalletModal(false)}
-              className="w-full mt-6 py-3 px-4 bg-purple-600 hover:bg-purple-700 text-white font-medium rounded-xl transition-colors"
-            >
-              Done
-            </button>
-          </div>
-        </div>
+      {preferredWallet && (
+        <p className="text-xs text-center text-gray-400">
+          Preferred wallet: {preferredWallet} <br />
+          You can change it anytime in Settings.
+        </p>
       )}
     </div>
   )

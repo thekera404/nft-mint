@@ -67,7 +67,8 @@ export default function NFTMintPage() {
   useEffect(() => {
     const initializeApp = async () => {
       try {
-        console.log("[v0] Initializing Farcaster SDK...")
+        console.log("[v1] Initializing Farcaster SDK...")
+
         const isInFarcaster =
           typeof window !== "undefined" &&
           (window.parent !== window ||
@@ -76,23 +77,45 @@ export default function NFTMintPage() {
 
         if (isInFarcaster) {
           setIsFarcasterContext(true)
+
+          // Wait for Farcaster Mini App SDK to be ready
           await Promise.race([
             sdk.actions.ready(),
             new Promise((_, reject) => setTimeout(() => reject(new Error("SDK timeout")), 10000)),
           ])
+
+          // Ask user to choose wallet in Farcaster context
+          const selectedWallet = await sdk.wallet.requestWallet()
+          console.log("[v1] Selected Farcaster wallet:", selectedWallet)
+
         } else {
           setIsFarcasterContext(false)
+
+          // Outside Farcaster → show wallet connect options (e.g. MetaMask)
+          if (window.ethereum) {
+            try {
+              const accounts = await window.ethereum.request({
+                method: "eth_requestAccounts",
+              })
+              console.log("[v1] Connected external wallet:", accounts[0])
+            } catch (err) {
+              console.error("User rejected external wallet connection:", err)
+            }
+          } else {
+            console.warn("No external wallet provider found. Please install MetaMask.")
+          }
         }
 
         setIsReady(true)
       } catch (error) {
-        console.error("[v0] Failed to initialize Farcaster SDK:", error)
+        console.error("[v1] Failed to initialize app:", error)
         setIsReady(true)
       }
     }
 
     initializeApp()
-  }, []) 
+  }, [])
+
 
 
 
