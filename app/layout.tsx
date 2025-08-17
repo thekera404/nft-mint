@@ -13,10 +13,10 @@ const frameMetadata = {
     title: "Mint NFT",
     action: {
       type: "launch_frame",
-      name: "NFT Mint",
+      name: "Based Nouns Club",
       url: "https://nftmint-henna.vercel.app/",
       splashImageUrl: "https://nftmint-henna.vercel.app/splash.png", // wide splash image
-      splashBackgroundColor: "#6366F1",
+      splashBackgroundColor: "#0a0b2b",
     },
   },
 }
@@ -48,10 +48,10 @@ export const metadata: Metadata = {
         title: "Mint NFT",
         action: {
           type: "launch_frame",
-          name: "NFT Mint",
+          name: "Based Nouns NFT",
           url: "https://nftmint-henna.vercel.app",
           splashImageUrl: "https://nftmint-henna.vercel.app/splash.png",
-          splashBackgroundColor: "#6366F1",
+          splashBackgroundColor: "#0a0b2b",
         },
       },
     }),

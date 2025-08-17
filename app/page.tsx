@@ -9,10 +9,11 @@ import { Loader2, ExternalLink, CheckCircle, AlertCircle } from "lucide-react"
 import { sdk } from "@farcaster/miniapp-sdk"
 import { ConnectWallet } from "@/components/connect-wallet"
 import { CONTRACT_ADDRESS, CONTRACT_ABI } from "@/lib/contract"
+import { CarouselNext } from "@/components/ui/carousel"
 
 export default function NFTMintPage() {
   const [isReady, setIsReady] = useState(false)
-  // const [isFarcasterContext, setIsFarcasterContext] = useState(false)
+  const [isFarcasterContext, setIsFarcasterContext] = useState(false)
 
   const { address, isConnected } = useAccount()
   const { writeContract, data: hash, isPending } = useWriteContract()
@@ -45,21 +46,59 @@ export default function NFTMintPage() {
     args: address ? [address] : undefined,
   })
 
+  // useEffect(() => {
+  //   const initializeApp = async () => {
+  //     try {
+  //       console.log("[v0] Initializing Farcaster SDK...")
+  //       await sdk.actions.ready()
+  //       console.log("[v0] Farcaster SDK ready")
+  //       setIsReady(true)
+  //     } catch (error) {
+  //       console.error("[v0] Failed to initialize Farcaster SDK:", error)
+  //       setIsReady(true) // Continue even if SDK fails
+  //     }
+  //   }
+
+  //   initializeApp()
+  // }, [])
+
+
+// next
   useEffect(() => {
     const initializeApp = async () => {
       try {
         console.log("[v0] Initializing Farcaster SDK...")
-        await sdk.actions.ready()
-        console.log("[v0] Farcaster SDK ready")
+        const isInFarcaster =
+          typeof window !== "undefined" &&
+          (window.parent !== window ||
+            window.location !== window.parent.location ||
+            window.navigator.userAgent.includes("Farcaster"))
+
+        if (isInFarcaster) {
+          setIsFarcasterContext(true)
+          await Promise.race([
+            sdk.actions.ready(),
+            new Promise((_, reject) => setTimeout(() => reject(new Error("SDK timeout")), 10000)),
+          ])
+        } else {
+          setIsFarcasterContext(false)
+        }
+
         setIsReady(true)
       } catch (error) {
         console.error("[v0] Failed to initialize Farcaster SDK:", error)
-        setIsReady(true) // Continue even if SDK fails
+        setIsReady(true)
       }
     }
 
     initializeApp()
-  }, [])
+  }, []) 
+
+
+
+
+
+
 
 
 
