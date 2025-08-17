@@ -15,40 +15,40 @@
 // })
 
 
-import { createConfig, http } from "wagmi"
-import { base } from "wagmi/chains"
-import { farcasterMiniApp as miniAppConnector } from "@farcaster/miniapp-wagmi-connector"
-import { injected } from "wagmi/connectors"
+// import { createConfig, http } from "wagmi"
+// import { base } from "wagmi/chains"
+// import { farcasterMiniApp as miniAppConnector } from "@farcaster/miniapp-wagmi-connector"
+// import { injected } from "wagmi/connectors"
 
-export const config = createConfig({
-  chains: [base],
-  connectors: [miniAppConnector(), injected({ target: "metaMask" })],
-  transports: {
-    [base.id]: http(),
-  },
-})
-
-
-
-
-
-
-
-
-
-// import { http, createConfig } from 'wagmi'
-// import { base } from 'wagmi/chains'
-// import { farcasterMiniApp as miniAppConnector } from '@farcaster/miniapp-wagmi-connector'
- 
 // export const config = createConfig({
 //   chains: [base],
+//   connectors: [miniAppConnector(), injected({ target: "metaMask" })],
 //   transports: {
 //     [base.id]: http(),
 //   },
-//   connectors: [
-//     miniAppConnector()
-//   ]
 // })
+
+
+
+
+
+
+
+
+
+import { http, createConfig } from 'wagmi'
+import { base } from 'wagmi/chains'
+import { farcasterMiniApp as miniAppConnector } from '@farcaster/miniapp-wagmi-connector'
+ 
+export const config = createConfig({
+  chains: [base],
+  transports: {
+    [base.id]: http(),
+  },
+  connectors: [
+    miniAppConnector()
+  ]
+})
 
 // import { createConfig, http } from "wagmi"
 // import { base } from "wagmi/chains"
