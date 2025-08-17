@@ -54,7 +54,9 @@ export const config = createConfig({
   connectors: [
     miniAppConnector()
   ]
-// })
+})
+
+
 
 // import { createConfig, http } from "wagmi"
 // import { base } from "wagmi/chains"
