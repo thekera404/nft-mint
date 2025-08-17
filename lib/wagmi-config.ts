@@ -34,27 +34,48 @@
 // })
 
 
-
-
-
-
-
-
-
-
 import { http, createConfig } from 'wagmi'
 import { base } from 'wagmi/chains'
 import { farcasterMiniApp as miniAppConnector } from '@farcaster/miniapp-wagmi-connector'
- 
+import { injected, metaMask, walletConnect, coinbaseWallet } from 'wagmi/connectors'
+
 export const config = createConfig({
   chains: [base],
   transports: {
     [base.id]: http(),
   },
   connectors: [
-    miniAppConnector()
-  ]
+    // Farcaster Mini App connector (for Farcaster context)
+    miniAppConnector(),
+    
+    // Standard connectors for direct web access
+    injected(),
+    metaMask(),
+    coinbaseWallet({
+      appName: 'Based Nouns Club',
+    }),
+  ],
 })
+
+
+
+
+
+
+
+// import { http, createConfig } from 'wagmi'
+// import { base } from 'wagmi/chains'
+// import { farcasterMiniApp as miniAppConnector } from '@farcaster/miniapp-wagmi-connector'
+ 
+// export const config = createConfig({
+//   chains: [base],
+//   transports: {
+//     [base.id]: http(),
+//   },
+//   connectors: [
+//     miniAppConnector()
+//   ]
+// })
 
 
 
