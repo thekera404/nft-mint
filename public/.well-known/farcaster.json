@@ -27,6 +27,11 @@
 
 
   },
+  "baseBuilder": {
+    "allowedAddresses": ["0xe1830927C5E493E8215e0592aff9EEff1C678348"]
+  },
+
+
   "frames": {
     "recommended_frame_height": "tall"
   },
