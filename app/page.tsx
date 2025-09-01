@@ -9,7 +9,7 @@ import { Loader2, ExternalLink, CheckCircle, AlertCircle } from "lucide-react"
 import { sdk } from "@farcaster/miniapp-sdk"
 import { ConnectWallet } from "@/components/connect-wallet"
 import { CONTRACT_ADDRESS, CONTRACT_ABI } from "@/lib/contract"
-import { CarouselNext } from "@/components/ui/carousel"
+// Removed unused import
 
 export default function NFTMintPage() {
   const [isReady, setIsReady] = useState(false)
@@ -45,6 +45,13 @@ export default function NFTMintPage() {
     functionName: "hasMinted",
     args: address ? [address] : undefined,
   })
+
+  // Determine sold out state when totalSupply reaches or exceeds maxSupply
+  const soldOut = Boolean(
+    totalSupply !== undefined &&
+      maxSupply !== undefined &&
+      (totalSupply as bigint) >= (maxSupply as bigint)
+  )
 
   useEffect(() => {
     const initializeApp = async () => {
@@ -174,8 +181,9 @@ export default function NFTMintPage() {
     }
   }
 
-  const canMint = mintActive && !hasMinted && isConnected
+  const canMint = mintActive && !hasMinted && isConnected && !soldOut
   const getMintButtonText = () => {
+    if (soldOut) return "Sold Out"
     if (!mintActive) return "Minting Not Active"
     if (hasMinted) return "Already Minted"
     if (isPending || isConfirming) {
